@@ -1,0 +1,129 @@
+[
+    {
+        "name": "armored-container",
+        "image": "public.ecr.aws/k9v9d5v2/accuknox-bluelock/ka-socat-demo:latest",
+        "cpu": 0,
+        "portMappings": [
+            {
+                "containerPort": 1337,
+                "hostPort": 1337,
+                "protocol": "tcp",
+                "name": "armored-container-1337-tcp",
+                "appProtocol": "http"
+            }
+        ],
+        "essential": true,
+        "command": [
+            "kubearmor/bluelock",
+            "socat",
+            "TCP-LISTEN:1337,reuseaddr,fork",
+            "EXEC:bash,pty,stderr,setsid,sigint,sane"
+        ],
+        "environment": [
+            {
+                "name": "CONTAINERNAME",
+                "value": "armored-container"
+            },
+            {
+                "name": "K8S",
+                "value": "false"
+            }
+        ],
+        "mountPoints": [
+            {
+                "sourceVolume": "kubearmor-dir",
+                "containerPath": "/kubearmor",
+                "readOnly": true
+            }
+        ],
+        "volumesFrom": [],
+        "dependsOn": [
+            {
+                "containerName": "bluelock",
+                "condition": "SUCCESS"
+            }
+        ],
+        "logConfiguration": {
+            "logDriver": "awslogs",
+            "options": {
+                "awslogs-group": "${log_group_name}",
+                "awslogs-region": "us-east-1",
+                "awslogs-stream-prefix": "ecs"
+            }
+        },
+        "systemControls": []
+    },
+    {
+        "name": "bluelock",
+        "image": "public.ecr.aws/k9v9d5v2/accuknox-bluelock/bluelock:latest",
+        "cpu": 0,
+        "portMappings": [],
+        "essential": false,
+        "environment": [],
+        "mountPoints": [
+            {
+                "sourceVolume": "kubearmor-dir",
+                "containerPath": "/kubearmor",
+                "readOnly": false
+            }
+        ],
+        "volumesFrom": [],
+        "logConfiguration": {
+            "logDriver": "awslogs",
+            "options": {
+                "awslogs-group": "${log_group_name}",
+                "awslogs-region": "us-east-1",
+                "awslogs-stream-prefix": "ecs"
+            }
+        },
+        "systemControls": []
+    },
+    {
+        "name": "kubearmor-vm-adapter",
+        "image": "docker.io/accuknox/vm-adapter:v0.1.29",
+        "cpu": 0,
+        "portMappings": [],
+        "essential": true,
+        "command": [
+            "--kubearmor-addr=localhost:32767",
+            "--relay-server-addr=${cp_node_ip}:32768",
+            "--node-state-refresh=4",
+            "--policy-list-enable=true",
+            "--policy-list-relay-frequency=5m0s",
+            "--sia-addr=${cp_node_ip}:32769",
+            "--pea-addr=${cp_node_ip}:32770",
+            "--harden-addr=${cp_node_ip}:32771",
+            "--annotation-topic=annotation",
+            "--annotation-enable=true"
+        ],
+        "environment": [
+            {
+                "name": "test",
+                "value": "true"
+            }
+        ],
+        "mountPoints": [
+            {
+                "sourceVolume": "opt-storage",
+                "containerPath": "/opt",
+                "readOnly": false
+            }
+        ],
+        "volumesFrom": [],
+        "dependsOn": [
+            {
+                "containerName": "armored-container",
+                "condition": "START"
+            }
+        ],
+        "logConfiguration": {
+            "logDriver": "awslogs",
+            "options": {
+                "awslogs-group": "${log_group_name}",
+                "awslogs-region": "us-east-1",
+                "awslogs-stream-prefix": "adapter"
+            }
+        },
+        "systemControls": []
+    }
+]
