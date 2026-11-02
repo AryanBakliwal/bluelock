@@ -105,7 +105,7 @@ resource "aws_instance" "cp_node" {
                 --join-token=${var.join_token} \
                 --spire-host=spire.demo.accuknox.com \
                 --pps-host=pps.demo.accuknox.com \
-                --knox-gateway=knox-gw.demo.accuknox.com:3000
+                --knox-gateway=knox-gw.demo.accuknox.com:3000 \
                 --sumengine-viz="process,network,file" \
               EOF
   tags      = { Name = "cp-node" }
