@@ -134,16 +134,16 @@ resource "azurerm_linux_virtual_machine" "vm" {
   custom_data = base64encode(
     templatefile("${path.module}/vm-setup.sh", {
       token = var.vm_token
-      user = var.vm_username
+      user  = var.vm_username
     })
   )
 }
 
 resource "azurerm_container_app_environment" "this" {
-  name                       = "${var.name_prefix}-container-app-env"
-  location                   = azurerm_resource_group.this.location
-  resource_group_name        = azurerm_resource_group.this.name
-  infrastructure_subnet_id   = azurerm_subnet.container_apps.id
+  name                           = "${var.name_prefix}-container-app-env"
+  location                       = azurerm_resource_group.this.location
+  resource_group_name            = azurerm_resource_group.this.name
+  infrastructure_subnet_id       = azurerm_subnet.container_apps.id
   internal_load_balancer_enabled = false
 
   workload_profile {

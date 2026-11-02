@@ -15,7 +15,7 @@ resource "aws_vpc" "bluelock_vpc" {
   cidr_block           = "10.0.0.0/16"
   enable_dns_hostnames = true
   enable_dns_support   = true
-  tags = { Name = "bluelock-vpc" }
+  tags                 = { Name = "bluelock-vpc" }
 }
 
 resource "aws_subnet" "bluelock_subnet" {
@@ -23,12 +23,12 @@ resource "aws_subnet" "bluelock_subnet" {
   cidr_block              = "10.0.1.0/24"
   availability_zone       = "us-east-1a"
   map_public_ip_on_launch = true
-  tags = { Name = "bluelock-subnet" }
+  tags                    = { Name = "bluelock-subnet" }
 }
 
 resource "aws_internet_gateway" "bluelock_igw" {
   vpc_id = aws_vpc.bluelock_vpc.id
-  tags = { Name = "bluelock-igw" }
+  tags   = { Name = "bluelock-igw" }
 }
 
 resource "aws_route_table" "bluelock_rt" {
@@ -46,8 +46,8 @@ resource "aws_route_table_association" "bluelock_rta" {
 }
 
 resource "aws_security_group" "bluelock_sg" {
-  name        = "bluelock-sg"
-  vpc_id      = aws_vpc.bluelock_vpc.id
+  name   = "bluelock-sg"
+  vpc_id = aws_vpc.bluelock_vpc.id
   ingress {
     from_port   = 0
     to_port     = 0
@@ -108,7 +108,7 @@ resource "aws_instance" "cp_node" {
                 --knox-gateway=knox-gw.demo.accuknox.com:3000
                 --sumengine-viz="process,network,file" \
               EOF
-  tags = { Name = "cp-node" }
+  tags      = { Name = "cp-node" }
 }
 
 # --- IAM & Logging ---
@@ -120,7 +120,7 @@ resource "aws_cloudwatch_log_group" "ecs_armored_container" {
 resource "aws_iam_role" "ecs_task_execution_role" {
   name = "ecsTaskExecutionRolePolicy"
   assume_role_policy = jsonencode({
-    Version = "2012-10-17"
+    Version   = "2012-10-17"
     Statement = [{ Action = "sts:AssumeRole", Effect = "Allow", Principal = { Service = "ecs-tasks.amazonaws.com" } }]
   })
 }

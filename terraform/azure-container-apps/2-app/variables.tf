@@ -4,8 +4,8 @@ variable "resource_group_name" {
 }
 
 variable "container_app_environment" {
-  type = string
-    default = "bluelock-aca-container-app-env"
+  type    = string
+  default = "bluelock-aca-container-app-env"
 }
 
 variable "container_app_name" {

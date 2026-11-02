@@ -33,7 +33,7 @@ resource "azurerm_container_app" "this" {
     min_replicas = 2
     max_replicas = 2
 
-    cooldown_period_in_seconds = 300
+    cooldown_period_in_seconds  = 300
     polling_interval_in_seconds = 30
 
     # ---------------------------------------------------------

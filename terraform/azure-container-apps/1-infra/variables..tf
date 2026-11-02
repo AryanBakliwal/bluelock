@@ -19,7 +19,7 @@ variable "vm_username" {
 }
 
 variable "vm_password" {
-  type      = string
+  type    = string
   default = "password@123"
 }
 
