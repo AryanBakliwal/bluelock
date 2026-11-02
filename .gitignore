@@ -11,6 +11,24 @@
 # Output of the go coverage tool, specifically when used with LiteIDE
 *.out
 
+# Local .terraform directories containing massive provider binaries
+**/.terraform/*
+
+# State files containing cleartext infrastructure data and secrets
+*.tfstate
+*.tfstate.*
+
+# Variables files containing sensitive tokens or keys
+*.tfvars
+*.tfvars.json
+
+# Output plan files (if you use terraform plan -out=plan.cache)
+*.out
+*.plan
+*tfplan*
+
+**/.terraform.lock.hcl
+
 # Dependency directories (remove the comment below to include it)
 # vendor/
 

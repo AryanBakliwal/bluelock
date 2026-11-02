@@ -1,0 +1,26 @@
+apiVersion: security.kubearmor.com/v1
+kind: KubeArmorPolicy
+metadata:
+  name: ksp-block-file-dir-recursive
+  namespace: container_namespace
+spec:
+  action: Block
+  file:
+    matchDirectories:
+    - dir: /etc/ssl/
+      recursive: true
+    - dir: /etc/pki/
+      recursive: true
+    - dir: /usr/local/share/ca-certificates/
+      recursive: true
+  message: Credentials modification denied
+  selector:
+    matchLabels:
+      kubearmor.io/container.name: armored-container
+  severity: 1
+  tags:
+  - MITRE
+  - MITRE_T1552_unsecured_credentials
+
+  # testing
+  # ls /etc/ssl/certs
